@@ -1,0 +1,585 @@
+
+EXP 1 - EMPLOYEE JDBC
+
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class App {
+
+    static final String JDBC_Driver = "com.mysql.cj.jdbc.Driver";
+    static final String Db_url = "jdbc:mysql://localhost/employee_db";
+    static final String USER = "root";
+    static final String PASS = "12345678";
+    public static void main(String[] args) throws Exception {
+
+        Connection conn = null;
+        Statement stmt = null;
+        
+       try{
+
+        Class.forName(JDBC_Driver);
+        conn = DriverManager.getConnection(Db_url, USER, PASS);
+
+        if(conn!=null)
+        {
+            System.out.println("Connected to the database!");
+            
+            conn.setAutoCommit(false);
+            stmt = conn.createStatement();
+
+            //CREATE OPERATION
+            /*String createUser = "INSERT INTO employee VALUES ('1','Kavs','kav@gmail','12345','1000'),('2','Satheesh','sath@gmail','67890','2000')";
+            int rowsInserted = stmt.executeUpdate(createUser);
+            System.out.println(rowsInserted + " row(s) inserted");*/
+
+            //READUSER
+            String readUser = "SELECT * FROM employee";
+            ResultSet rs = stmt.executeQuery(readUser);
+            while(rs.next()){
+
+                int id = rs.getInt("e_id");
+                String name = rs.getString("e_name");
+                String email = rs.getString("e_email");
+                String phno = rs.getString("e_phno");
+                String salary = rs.getString("e_salary");
+
+                System.out.println("Id: " + id + "\nName: " + name + "\nEmail: " + email + "\nPhone: " + phno + "\nSalary: " + salary);
+            }
+            rs.close();
+
+            //UPDATE OPERATION
+            /*String updateUser = "UPDATE employee SET e_name = 'Kaviya' where e_id = 1 ";
+            int  rowsUpdated = stmt.executeUpdate(updateUser);
+            System.out.println(rowsUpdated + " row(s) updated");*/
+
+            //DELETE OPERATION
+            String deleteUser = "DELETE FROM employee where e_name = 'Kaviya'";
+            int rowsDeleted = stmt.executeUpdate(deleteUser);
+            System.out.println(rowsDeleted + " row(s) deleted");
+
+
+            conn.commit();
+        }
+        else{
+            System.out.println("Not connected to database!");
+        }
+       }
+       catch(ClassNotFoundException | SQLException se){
+
+        se.printStackTrace();
+
+        try{
+            if(conn!=null)
+            {
+                conn.rollback();
+            }
+        }
+        catch(SQLException rollbackException){
+            rollbackException.printStackTrace();
+        }
+       }
+    }
+}
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+EXP 2 - VEHICLE JDBC
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class App {
+
+
+    static final String JDBC_Driver = "com.mysql.cj.jdbc.Driver";
+    static final String Db_url = "jdbc:mysql://localhost/vehicle_db";
+    static final String USER = "root";
+    static final String PASS = "12345678";
+
+    public static void main(String[] args) {
+        
+        Connection conn = null;
+        Statement stmt = null;
+
+        try{
+
+            Class.forName(JDBC_Driver);
+            conn = DriverManager.getConnection(Db_url, USER, PASS);
+
+            if(conn!=null){
+                System.out.println("Connected to database!");
+                conn.setAutoCommit(false);
+                stmt = conn.createStatement();
+
+                //CREATE OPERATION
+                /*String createUser = "INSERT INTO vehicle VALUES ('1','Toyoto','Camry','silver','2020','petrol','2000000'),('2','Swift','Desire','white','2022','petrol','3000000')";
+                int rowsInserted = stmt.executeUpdate(createUser);
+                System.out.println(rowsInserted + " row(s) inserted");*/
+
+                //READ OPERATION
+                String readUser = "SELECT * FROM vehicle";
+                ResultSet rs = stmt.executeQuery(readUser);
+                while(rs.next()){
+
+                    int id = rs.getInt("id");
+                    String manufacture = rs.getString("manufacture");
+                    String model = rs.getString("model");
+                    String color = rs.getString("color");
+                    String year = rs.getString("year");
+                    String fuel = rs.getString("fuel");
+                    String price = rs.getString("price");
+
+                    System.out.println("ID: " + id + "\nManufacture: " + manufacture + "\nModel: " + model + "\nColor: " + color + "\nYear: " + year + "\nFuel: " + fuel + "\nPrice: " + price);
+
+                }
+
+                rs.close();
+
+
+
+                //UPDATE OPERATION
+                /*String updateUser = "UPDATE vehicle SET year = '2021' where id = 1 ";
+                int rowsUpdated = stmt.executeUpdate(updateUser);
+                System.out.println(rowsUpdated + " row(s) updated");*/
+
+                //DELETE OPERATION
+                String deleteUser = "DELETE FROM vehicle where id = 1 ";
+                int rowsDeleted = stmt.executeUpdate(deleteUser);
+                System.out.println(rowsDeleted + " row(s) deleted");
+                
+                conn.commit();
+            }
+            else{
+                System.out.println("Failed to make connection");
+            }
+        }
+        
+        catch(ClassNotFoundException | SQLException se){
+            se.printStackTrace();
+
+            try{
+                if(conn!=null){
+                    conn.rollback();
+                }
+            }
+            catch(SQLException rollbackException){
+                rollbackException.printStackTrace();
+            }
+        }
+    }
+}
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+EXP 3 - FACEBOOK
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Select;
+
+public class App {
+    public static void main(String[] args) throws InterruptedException{
+        //set the path of the ChromeDriver executable
+        
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\HP\\Documents\\SELENIUM\\REV_3\\src\\chromedriver.exe");
+        WebDriver driver=new ChromeDriver();
+        driver.get("https://www.facebook.com/signup");
+        driver.manage().window().maximize();
+        
+        WebElement firstNameInput = driver.findElement(By.name("firstname"));
+        WebElement lastNameInput = driver.findElement(By.name("lastname"));
+        WebElement mobilenumber = driver.findElement(By.name("reg_email__"));
+        WebElement password = driver.findElement(By.name("reg_passwd__"));
+        WebElement DOB = driver.findElement(By.name("birthday_day"));
+        WebElement DOB1 = driver.findElement(By.name("birthday_month"));
+        WebElement DOB2 = driver.findElement(By.name("birthday_year"));
+        WebElement gender = driver.findElement(By.xpath("//input[@value='-1']"));
+        WebElement pronoun = driver.findElement(By.name("preferred_pronoun"));
+        WebElement SUBMIT = driver.findElement(By.name("websubmit"));
+        firstNameInput.sendKeys("Kaviya");
+        lastNameInput.sendKeys("A");
+        mobilenumber.sendKeys("7806879918");
+        password.sendKeys("kaviya24");
+        DOB.sendKeys("8");
+        DOB1.sendKeys("March");
+        DOB2.sendKeys("2005");
+
+
+        if(!gender.isSelected()){
+            //click the radio button
+            gender.click();
+        }
+        Select pronoun1=new Select(pronoun);
+            pronoun1.selectByVisibleText("She: \"Wish her a happy birthday!\"");
+        SUBMIT.click();
+           //close the browser
+        Thread.sleep(10000);
+        driver.quit();
+
+    }
+}
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+EXP 4 - COURSERA
+
+import java.time.Duration;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+public class App {
+ public static void main(String[] args) throws InterruptedException {
+ System.setProperty("webdriver.chrome.driver",
+ "C:\\Users\\HP\\Documents\\SELENIUM\\REV_4\\src\\chromedriver.exe");
+ WebDriver driver = new ChromeDriver();
+ driver.get("https://www.coursera.org/?authMode=login");
+ driver.manage().window().maximize();
+
+ // Email Field (id)
+ WebElement emailInput = driver.findElement(By.id("email"));
+ emailInput.sendKeys("727822tuit118@skct.edu.in");
+
+ // Password Field (name)
+ WebElement passwordInput = driver.findElement(By.name("password"));
+ passwordInput.sendKeys("Kaviya@coursera");
+
+ // Mouse Handling for click login button (xpath)
+ WebDriverWait login = new WebDriverWait(driver, Duration.ofSeconds(40));
+ WebElement clickLogin =login.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/div[5]/div/div/section/section/div[1]/form/div[3]/button")));
+ clickLogin.click();
+
+ Thread.sleep(40000);
+
+ // Search box (xpath)
+ WebElement search = driver.findElement(By.xpath("/html/body/div[2]/div/div[1]/div/span/div[1]/header/div[1]/div/div/div/div/div/div[1]/div/div/div[3]/div/div[2]/form/div/div[1]/input"));
+ search.sendKeys("Testing methodologies");
+
+ // Keyboard selector for enter search button
+ Actions actions = new Actions(driver);
+ actions.sendKeys(Keys.ENTER).perform();
+ }
+}
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+EXP 5 - LINKEDIN
+
+import java.time.Duration;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+public class LinkedIn {
+    public static void main(String[] args) throws InterruptedException {
+
+        System.setProperty("webdriver.chrome.driver",
+                "C:\\Users\\HP\\Documents\\SELENIUM\\REV_5\\src\\chromedriver.exe");
+
+        WebDriver driver = new ChromeDriver();
+        driver.get("https://www.linkedin.com");
+
+        driver.manage().window().maximize();
+
+        // Email field
+        WebElement emailInput = driver.findElement(By.name("session_key"));
+        emailInput.sendKeys("arukaviya679@gmail.com");
+
+        // Password field
+        WebElement passwordInput = driver.findElement(By.name("session_password"));
+        passwordInput.sendKeys("Kaviya@08");
+
+        // Click SignIn by Mouse handling
+        WebDriverWait signIn = new WebDriverWait(driver, Duration.ofSeconds(40));
+        WebElement clickSignIn = signIn.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/main/section[1]/div/div/form/div[2]/button")));
+        clickSignIn.click();
+
+        Thread.sleep(4000);
+
+        // JobSearch by Keyboard Handling
+        driver.findElement(By.xpath("/html/body/div[5]/header/div/div/div/div[1]/input")).sendKeys("Full Stack Developer jobs");
+
+        Actions actions = new Actions(driver);
+        actions.sendKeys(Keys.ENTER).perform();
+
+        // Click on Job using Mouse Handling
+        WebDriverWait job = new WebDriverWait(driver, Duration.ofSeconds(40));
+        WebElement clickJob = job.until(ExpectedConditions.elementToBeClickable(By.xpath( "/html/body/div[5]/div[3]/div[2]/div/div[1]/main/div/div/div[1]/div/ul[2]/li[1]/div/div/div/div[2]/div[1]/div[1]/div/span/span/a")));
+        clickJob.click();
+
+        // Click on Apply using Mouse Handling
+        WebDriverWait apply = new WebDriverWait(driver, Duration.ofSeconds(40));
+        WebElement clickApply = apply.until(ExpectedConditions.elementToBeClickable(By.xpath("/html/body/div[5]/div[3]/div[4]/div/div/main/div/div[2]/div[2]/div/div[2]/div/div[1]/div/div[1]/div/div[1]/div[1]/div[5]/div/div/div/button/span")));
+        clickApply.click();
+
+    }
+}
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+EXP 6 - PSG HOSPITAL
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+public class App {
+    public static void main(String[] args) throws Exception {
+        System.setProperty("webdriver.chrome.driver","C:\\Users\\HP\\Documents\\SELENIUM\\REV_6\\src\\chromedriver.exe");
+        WebDriver driver = new ChromeDriver();
+        driver.get("https://www.psghospitals.com/book-an-appointment/#dr_appointment");
+        driver.manage().window().maximize();
+
+        WebElement doctor =driver.findElement(By.xpath("//*[@id='Container']/div[1]/div[1]/a/img[2]"));
+        doctor.click();
+        Thread.sleep(10000);
+
+        WebElement doctorappoin =driver.findElement(By.xpath("/html/body/div[7]/div/div/div/div/div/div/div/div/div[2]/div/div[2]/ul/li[1]/a"));
+        doctorappoin.click();
+
+        WebElement name = driver.findElement(By.name("PatientName"));
+        name.sendKeys("kaviya");
+        WebElement email = driver.findElement(By.name("Email"));
+        email.sendKeys("kaviya@gmail.com");
+        WebElement num = driver.findElement(By.name("Mobile"));
+        num.sendKeys("12345567890");
+
+        WebElement patient = driver.findElement(By.xpath("/html/body/div[7]/div/div/div/div/div/div/div/form/ul/li[6]/div/p/span/span/span[1]/label/span"));
+        if(!patient.isSelected())
+        {
+            patient.click();
+        }
+        // Preferred date
+        WebElement date = driver.findElement(By.name("Preferreddate"));
+        date.sendKeys("26-09-2024");
+        WebElement det = driver.findElement(By.name("OtherDetails"));
+        det.sendKeys("nil");
+        
+        WebElement submit =driver.findElement(By.xpath("/html/body/div[7]/div/div/div/div/div/div/div/form/ul/li[10]/p/input"));
+        submit.click();
+        // Other details
+    }
+}
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+EXP 7 - EBAY MOUSE KEYBOARD ACTIONS
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
+
+public class App {
+    public static void main(String[] args) throws InterruptedException 
+    {
+        System.setProperty("webdriver.chrome.driver","C:\\Users\\HP\\Documents\\SELENIUM\\REV_7\\src\\chromedriver.exe");
+
+        WebDriver driver =new ChromeDriver();
+
+        driver.get("https://www.ebay.com/");
+
+        driver.manage().window().maximize();
+
+        Actions a = new Actions(driver);
+
+        a.moveToElement(driver.findElement(By.xpath("//*[@id='vl-flyout-nav']/ul/li[5]/a"))).click().build().perform();
+        Thread.sleep(2000);
+
+        a.sendKeys(Keys.PAGE_DOWN).build().perform();
+        Thread.sleep(2000);
+
+    
+
+    a.moveToElement(driver.findElement(By.xpath("//*[@id='mainContent']/section[2]/div[2]/span[1]/a/div[1]/img"))).click().build().perform();
+    Thread.sleep(2000);
+
+    a.moveToElement(driver.findElement(By.xpath("/html/body/div[3]/div[3]/div[3]/section[1]/div[2]/span[1]/a/div[1]/img"))).click().build().perform();
+    Thread.sleep(2000);
+
+    driver.navigate().back();
+    Thread.sleep(3000);
+
+    WebElement search = driver.findElement(By.xpath("//*[@id='gh-ac']"));
+
+    a.moveToElement(search).click().sendKeys("t-shirts").build().perform();
+    Thread.sleep(2000);
+
+    a.sendKeys(Keys.BACK_SPACE).build().perform();
+
+    Thread.sleep(2000);
+
+    search.sendKeys(" for men");
+
+    Thread.sleep(2000);
+
+    a.doubleClick().build().perform();
+
+    Thread.sleep(2000);
+  
+    a.sendKeys(Keys.BACK_SPACE).build().perform();
+
+    Thread.sleep(2000);
+
+    a.moveToElement(search).click().keyDown(Keys.SHIFT).sendKeys(" women").build().perform();
+
+    Thread.sleep(2000);
+
+    a.sendKeys(Keys.ENTER).build().perform();
+
+    Thread.sleep(20000);
+    
+}
+}
+
+
+
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------
+EXP 9 - MYNTRA
+
+import java.time.Duration;
+import java.util.Set;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+public class App {
+    public static void main(String[] args) throws InterruptedException {
+        System.setProperty("webdriver.chrome.driver", "C:\\Users\\HP\\Documents\\SELENIUM\\REV_9\\src\\chromedriver.exe");
+        WebDriver driver = new ChromeDriver();
+        driver.get("https://www.myntra.com/");
+
+        driver.manage().window().maximize();
+
+        String mainPageId = driver.getWindowHandle();
+
+        driver.findElement(By.xpath("//*[@id=\"desktop-header-cnt\"]/div[2]/div[3]/input")).sendKeys("bluetooth");
+        Thread.sleep(4000);
+        Actions actions = new Actions(driver);
+        actions.sendKeys(Keys.ENTER).perform();
+
+        WebElement sung = driver.findElement(By.xpath(
+                "/html/body/div[2]/div/main/div[3]/div[2]/div/div[2]/section/ul/li[2]/a/div[1]/div/div/div/picture/img"));
+        sung.click();
+
+        Set<String> allPageId = driver.getWindowHandles();
+        for (String pageId : allPageId) {
+            if (!pageId.equals(mainPageId)) {
+                driver.switchTo().window(pageId);
+            }
+        }
+
+        WebDriverWait add = new WebDriverWait(driver, Duration.ofSeconds(40));
+        WebElement add1 = add.until(ExpectedConditions.elementToBeClickable(
+                By.xpath("/html/body/div[2]/div/div[1]/main/div[2]/div[2]/div[2]/div[3]/div/div[1]")));
+        add1.click();
+
+        WebDriverWait cart = new WebDriverWait(driver, Duration.ofSeconds(40));
+        WebElement cart1 = cart.until(ExpectedConditions.elementToBeClickable(
+                By.xpath("/html/body/div[2]/div/div[1]/main/div[2]/div[2]/div[2]/div[3]/div/a/span[1]")));
+        cart1.click();
+
+        WebDriverWait place = new WebDriverWait(driver, Duration.ofSeconds(40));
+        WebElement place1 = place.until(ExpectedConditions.elementToBeClickable(
+                By.xpath("/html/body/div[1]/div[2]/div/div/div/div/div/div[2]/div[3]/button/div")));
+        place1.click();
+
+    }
+}
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+EXP 10 -TESTNG - BANK
+
+package Test;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+public class BankingAppLoginTest {
+    
+    // Test for Email Validation
+    @Test(groups = {"authentication"})
+    public void testValidEmail() {
+        boolean emailResult = performEmailValidation("validEmail");
+        Assert.assertTrue(emailResult, "Email is Valid");
+    }
+    
+    // Test for Phone Number Validation
+    @Test(groups = {"authentication"})
+    public void testValidPhoneNumber() {
+        boolean loginPhone = performPhoneValidation(123456789L);
+        Assert.assertTrue(loginPhone, "Phone Number is valid");
+    }
+    
+    // Test for Login Credentials (Username and Password)
+    @Test(groups = {"authentication"})
+    public void testLogin() {
+        boolean loginResult = performLoginBoth("validUsername", "validPassword");
+        Assert.assertTrue(loginResult, "Login Successful");
+    }
+    
+    // Test for OTP Verification
+    @Test(groups = {"authentication"})
+    public void testOTP() {
+        boolean loginOTP = performValidOTP("0223");
+        Assert.assertTrue(loginOTP, "OTP is Valid");
+    }
+    
+    // Method to perform Email Validation
+    private boolean performEmailValidation(String email) {
+        return email.equals("validEmail");
+    }
+    
+    // Method to perform Phone Number Validation
+    private boolean performPhoneValidation(long phone) {
+        return phone == 123456789L;
+    }
+    
+    // Method to perform Login with Both Username and Password
+    private boolean performLoginBoth(String username, String password) {
+        return username.equals("validUsername") && password.equals("validPassword");
+    }
+    
+    // Method to perform OTP Verification
+    private boolean performValidOTP(String otp) {
+        // Assuming OTP is a string
+        return otp.equals("0223");
+    }
+}
+-----------------------------------------------------------------------------------------------------------------------------------
+
+
+
